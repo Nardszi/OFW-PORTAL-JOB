@@ -13,72 +13,144 @@ A web-based management system for Overseas Filipino Workers (OFWs) built with PH
 - Notifications system
 - Activity logs
 
+---
+
 ## Requirements
 
 - PHP 7.4+
 - MySQL 5.7+
-- Apache (XAMPP / WAMP / any web server with mod_rewrite enabled)
+- Apache with `mod_rewrite` enabled (XAMPP or WAMP recommended)
+- cURL enabled in PHP (`extension=curl` in `php.ini`)
 
-## Setup
+---
 
-1. Clone the repository into your web server's root directory (e.g., `htdocs` for XAMPP).
-2. Import the database schema from `db/ofw_management (3).sql` into your MySQL server.
-3. Update the database credentials in `config/database.php`:
+## Installation
 
-```php
-$host = "your_host";
-$user = "your_username";
-$pass = "your_password";
-$db_name = "your_database_name";
+### Step 1 — Clone the Repository
+
+```bash
+git clone https://github.com/Nardszi/OFW-PORTAL-JOB.git
 ```
 
-4. Make sure the `uploads/` directory is writable by the web server.
-5. Visit `http://localhost/` in your browser.
+Place the cloned folder inside your web server root:
+- XAMPP: `C:/xampp/htdocs/`
+- WAMP: `C:/wamp64/www/`
+
+---
+
+### Step 2 — Import the Database
+
+1. Open your browser and go to `http://localhost/phpmyadmin`
+2. Create a new database (e.g., `ofwmanagement`)
+3. Click the database → `Import` tab
+4. Select the file `db/ofw_management (3).sql` and click `Go`
+
+---
+
+### Step 3 — Configure the Database
+
+Open `config/database.php` and update with your credentials:
+
+```php
+$host = "localhost";         // usually localhost for XAMPP
+$user = "root";              // your MySQL username
+$pass = "";                  // your MySQL password (blank for XAMPP default)
+$db_name = "ofwmanagement";  // the database name you created
+```
+
+---
+
+### Step 4 — Set Up the Uploads Folder
+
+Make sure the `uploads/` folder exists and is writable. In XAMPP this is automatic, but if needed run:
+
+```bash
+chmod 775 uploads/
+```
+
+---
+
+### Step 5 — Enable mod_rewrite (Apache)
+
+The `.htaccess` file handles URL rewriting. Make sure `mod_rewrite` is enabled:
+
+1. Open `C:/xampp/apache/conf/httpd.conf`
+2. Find and uncomment this line (remove the `#`):
+
+```
+LoadModule rewrite_module modules/mod_rewrite.so
+```
+
+3. Also find `AllowOverride None` and change it to `AllowOverride All`
+4. Restart Apache
+
+---
+
+### Step 6 — Visit the App
+
+Open your browser and go to:
+
+```
+http://localhost/OFW-PORTAL-JOB/
+```
+
+---
 
 ## Default Roles
 
-- **Admin** – Manages users, jobs, benefits, news, and applications.
-- **OFW** – Can apply for jobs and benefits, view news, and manage their profile.
+| Role  | Access |
+|-------|--------|
+| Admin | Manage users, jobs, benefits, news, applications |
+| OFW   | Apply for jobs and benefits, view news, manage profile |
+
+To create an admin account, register normally then manually update the `role` column in the `users` table to `admin` via phpMyAdmin.
+
+---
 
 ## OTP Email Setup
 
-The OTP system uses the [Brevo](https://www.brevo.com) (formerly Sendinblue) API to send verification emails. Follow these steps to get it working:
+The registration form sends a 6-digit OTP to verify the user's email. Two options are available:
 
-### Option 1: Brevo API (Recommended)
+### Option 1 — Brevo API (Recommended, no SMTP needed)
 
-1. Go to [https://www.brevo.com](https://www.brevo.com) and create a free account.
-2. Navigate to `SMTP & API` → `API Keys` → click `Generate a new API key`.
-3. Copy the key and open `auth/send_otp.php`.
-4. Replace `YOUR_BREVO_API_KEY` on line 27 with your actual key:
+1. Sign up for free at [https://www.brevo.com](https://www.brevo.com)
+2. Go to `SMTP & API` → `API Keys` → `Generate a new API key`
+3. Open `auth/send_otp.php` and replace `YOUR_BREVO_API_KEY`:
 
 ```php
-$apiKey = 'your-actual-api-key-here';
+$apiKey = 'your-brevo-api-key-here';
 ```
 
-5. Also update the sender email in the same file to match your verified Brevo sender:
+4. Update the sender email to your verified Brevo sender address:
 
 ```php
 'sender' => ['name' => 'OFW Management', 'email' => 'your@email.com'],
 ```
 
-6. Do the same in `manage_applications.php` and `view_benefit_applications.php`.
+5. Do the same replacement in:
+   - `manage_applications.php` (around line 174)
+   - `view_benefit_applications.php` (around line 175)
 
-### Option 2: Gmail SMTP (PHPMailer)
+---
 
-1. Install PHPMailer via Composer:
+### Option 2 — Gmail SMTP via PHPMailer
+
+1. Install PHPMailer:
 
 ```bash
 composer require phpmailer/phpmailer
 ```
 
-2. Go to your Google account → `Security` → `2-Step Verification` → `App Passwords` and generate a password.
-3. In `auth/send_otp.php`, comment out the Brevo block and uncomment the Gmail SMTP block.
-4. Replace the credentials:
+2. Go to your Google account → `Security` → `2-Step Verification` → `App Passwords` → generate a password
+3. In `auth/send_otp.php`, comment out the Brevo block and uncomment the Gmail SMTP block
+4. Fill in your credentials:
 
 ```php
 $mail->Username = 'your@gmail.com';
-$mail->Password = 'your-app-password';
+$mail->Password = 'your-google-app-password';
 ```
+
+---
 
 ## License
 
