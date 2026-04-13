@@ -1,0 +1,16 @@
+# Uploaded files
+uploads/
+
+# Cache
+cache/
+
+# Environment / config overrides
+config/database.php
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+*.code-workspace

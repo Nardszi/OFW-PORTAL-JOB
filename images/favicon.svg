@@ -1,0 +1,27 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="favGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2563EB;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1E40AF;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect x="0" y="0" width="64" height="64" rx="12" fill="url(#favGradient)"/>
+  
+  <!-- Simplified OFW -->
+  <g transform="translate(32, 34)">
+    <!-- O -->
+    <path d="M -18 -8 C -18 -12, -16 -14, -13 -14 C -10 -14, -8 -12, -8 -8 L -8 8 C -8 12, -10 14, -13 14 C -16 14, -18 12, -18 8 Z M -16 -8 L -16 8 C -16 10, -15 11, -13 11 C -11 11, -10 10, -10 8 L -10 -8 C -10 -10, -11 -11, -13 -11 C -15 -11, -16 -10, -16 -8 Z" 
+          fill="white"/>
+    
+    <!-- F -->
+    <rect x="-4" y="-14" width="3" height="28" rx="1" fill="white"/>
+    <rect x="-4" y="-14" width="10" height="3" rx="1" fill="white"/>
+    <rect x="-4" y="-2" width="8" height="3" rx="1" fill="white"/>
+    
+    <!-- W -->
+    <path d="M 8 -14 L 10 -14 L 13 6 L 16 -14 L 18 -14 L 21 6 L 24 -14 L 26 -14 L 22 14 L 20 14 L 17 -4 L 14 14 L 12 14 Z" 
+          fill="white"/>
+  </g>
+</svg>

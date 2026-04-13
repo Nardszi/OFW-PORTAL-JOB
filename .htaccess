@@ -1,0 +1,62 @@
+# OFW Management System - Apache Configuration
+
+# Enable Rewrite Engine
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+    
+    # Exclude specific files and folders from rewrite rules
+    RewriteCond %{REQUEST_URI} ^/uploads/ [OR]
+    RewriteCond %{REQUEST_URI} ^/download\.php [OR]
+    RewriteCond %{REQUEST_URI} ^/images/ [OR]
+    RewriteCond %{REQUEST_URI} ^/css/ [OR]
+    RewriteCond %{REQUEST_URI} ^/js/ [OR]
+    RewriteCond %{REQUEST_URI} ^/cache/
+    RewriteRule ^ - [L]
+    
+    # Remove .php extension
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME}\.php -f
+    RewriteRule ^(.*)$ $1.php [L]
+    
+    # Redirect .php URLs to extensionless URLs
+    RewriteCond %{THE_REQUEST} ^GET\ /[^?\s]+\.php
+    RewriteCond %{REQUEST_URI} !^/download\.php
+    RewriteRule ^(.*)\.php$ /$1 [R=301,L]
+</IfModule>
+
+# Prevent directory listing
+Options -Indexes
+
+# Set default charset
+AddDefaultCharset UTF-8
+
+# Set proper MIME types
+<IfModule mod_mime.c>
+    AddType image/jpeg .jpg .jpeg
+    AddType image/png .png
+    AddType image/gif .gif
+    AddType image/webp .webp
+    AddType image/svg+xml .svg
+    AddType application/javascript .js
+    AddType text/css .css
+    AddType application/json .json
+    AddType application/pdf .pdf
+</IfModule>
+
+# Enable compression (if supported)
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json
+</IfModule>
+
+# Protect sensitive files
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Protect configuration and sensitive files
+<FilesMatch "\.(sql|log)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
