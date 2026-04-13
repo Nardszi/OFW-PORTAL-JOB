@@ -40,6 +40,46 @@ $db_name = "your_database_name";
 - **Admin** – Manages users, jobs, benefits, news, and applications.
 - **OFW** – Can apply for jobs and benefits, view news, and manage their profile.
 
+## OTP Email Setup
+
+The OTP system uses the [Brevo](https://www.brevo.com) (formerly Sendinblue) API to send verification emails. Follow these steps to get it working:
+
+### Option 1: Brevo API (Recommended)
+
+1. Go to [https://www.brevo.com](https://www.brevo.com) and create a free account.
+2. Navigate to `SMTP & API` → `API Keys` → click `Generate a new API key`.
+3. Copy the key and open `auth/send_otp.php`.
+4. Replace `YOUR_BREVO_API_KEY` on line 27 with your actual key:
+
+```php
+$apiKey = 'your-actual-api-key-here';
+```
+
+5. Also update the sender email in the same file to match your verified Brevo sender:
+
+```php
+'sender' => ['name' => 'OFW Management', 'email' => 'your@email.com'],
+```
+
+6. Do the same in `manage_applications.php` and `view_benefit_applications.php`.
+
+### Option 2: Gmail SMTP (PHPMailer)
+
+1. Install PHPMailer via Composer:
+
+```bash
+composer require phpmailer/phpmailer
+```
+
+2. Go to your Google account → `Security` → `2-Step Verification` → `App Passwords` and generate a password.
+3. In `auth/send_otp.php`, comment out the Brevo block and uncomment the Gmail SMTP block.
+4. Replace the credentials:
+
+```php
+$mail->Username = 'your@gmail.com';
+$mail->Password = 'your-app-password';
+```
+
 ## License
 
 This project is for educational purposes.
